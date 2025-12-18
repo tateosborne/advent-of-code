@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",         // Modern JS features
+    "module": "commonjs",       // Use CommonJS module system (required for Node.js)
+    "strict": true,             // Turn on all strict type-checking options
+    "esModuleInterop": true,    // Make sure you can import non-ES modules like fs
+    "skipLibCheck": true,       // Skip type-checking of declaration files for faster build
+    "outDir": "./dist",         // Output directory for compiled JS
+    "rootDir": "./src",         // Where your TypeScript source files are
+    "types": ["node"]           // Ensure the TypeScript compiler knows about Node.js types
+  },
+  "include": ["src/**/*"],      // Include all files in the src directory
+  "exclude": ["node_modules"]   // Exclude node_modules from being compiled
+}
+
