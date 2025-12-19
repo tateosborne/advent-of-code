@@ -1,29 +1,37 @@
 import { open } from 'fs/promises';
 import path from 'path';
 
-enum Direction {
-  L = -1,
-  R = 1,
-}
 
-async function grabRotations(fp: string, curr: number, atZeroCounter: number): Promise<void> {
+async function unlockSafe(fp: string, curr: number, atZeroCounter: number): Promise<number> {
     const f = await open(fp)
 
     for await (const r of f.readLines()) {
-        const direction = r[0]
-        const amount = r.replace(r[0], "")
-        console.log(direction + " -> " + amount)
+        const direction = r[0];
+        const amount = Number(r.replace(r[0], ""));
+
+        if (direction == "L")
+            curr = (curr - amount + 100) % 100;
+        else
+            curr = (curr + amount) % 100;
+
+        if (curr == 0) {
+            atZeroCounter = atZeroCounter + 1;
+        }
     }
+
+    return atZeroCounter;
 }
 
 
-function main(): void {
+async function main(): Promise<void> {
     const fp = path.join(__dirname, "../assets/day1.txt");
 
-    let curr = 50
-    let atZeroCounter = 0
+    let curr = 50;
+    let atZeroCounter = 0;
 
-    grabRotations(fp, curr, atZeroCounter)
+    const res = await unlockSafe(fp, curr, atZeroCounter);
+
+    console.log(res);
 }
 
-main()
+main();
