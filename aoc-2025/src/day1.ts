@@ -7,12 +7,12 @@ async function unlockSafe(fp: string, curr: number, atZeroCounter: number): Prom
 
     for await (const r of f.readLines()) {
         const direction = r[0];
-        const amount = Number(r.replace(r[0], ""));
+        const rotation = Number(r.replace(r[0], ""));
 
         if (direction == "L")
-            curr = (curr - amount + 100) % 100;
+            curr = (curr - rotation + 100) % 100;
         else
-            curr = (curr + amount) % 100;
+            curr = (curr + rotation) % 100;
 
         if (curr == 0) {
             atZeroCounter = atZeroCounter + 1;
