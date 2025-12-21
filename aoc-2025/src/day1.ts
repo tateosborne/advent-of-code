@@ -2,8 +2,9 @@ import { open } from 'fs/promises';
 import path from 'path';
 
 
-async function unlockSafe(fp: string, curr: number, atZeroCounter: number): Promise<number> {
+async function solvePartOne(fp: string, curr: number): Promise<number> {
     const f = await open(fp)
+    let res = 0;
 
     for await (const r of f.readLines()) {
         const direction = r[0];
@@ -15,21 +16,27 @@ async function unlockSafe(fp: string, curr: number, atZeroCounter: number): Prom
             curr = (curr + rotation) % 100;
 
         if (curr == 0) {
-            atZeroCounter = atZeroCounter + 1;
+            res = res + 1;
         }
     }
 
-    return atZeroCounter;
+    return res
+}
+
+
+async function unlockSafe(fp: string, curr: number): Promise<[number, number]> {
+    const partOneRes = await solvePartOne(fp, curr);
+    // const partTwoRes = await solvePartTwo();
+
+    return [partOneRes, 0];
 }
 
 
 async function main(): Promise<void> {
     const fp = path.join(__dirname, "../assets/day1.txt");
-
     let curr = 50;
-    let atZeroCounter = 0;
 
-    const res = await unlockSafe(fp, curr, atZeroCounter);
+    const res = await unlockSafe(fp, curr);
 
     console.log(res);
 }
