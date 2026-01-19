@@ -31,24 +31,39 @@ function parseContents(contents: string): Array<Range> {
 }
 
 
-function countInvalidIds(ranges: Array<Range>): number {
+function countInvalidIds(ranges: Array<Range>, part: Number): number {
     let total = 0;
 
-    for (const r of ranges) {
+    if (part == 1) {
+        for (const r of ranges) {
 
-        for (let i=r.lower; i<=r.upper; i++) {
-            const i_str = i.toString();
-            const length = i_str.length;
+            for (let i=r.lower; i<=r.upper; i++) {
+                const i_str = i.toString();
+                const length = i_str.length;
 
-            if (length % 2 == 0) {
-                const left = i_str.substring(0, length/2);
-                const right = i_str.substring(length/2);
+                if (length % 2 == 0) {
+                    const left = i_str.substring(0, length/2);
+                    const right = i_str.substring(length/2);
 
-                if (left == right) {
+                    if (left == right) {
+                        total = total + i;
+                    }
+                }
+            }
+        }
+    } else {
+        const regex = /\b(\d+)\1+\b/;
+        for (const r of ranges) {
+
+            for (let i=r.lower; i<=r.upper; i++) {
+                const i_str = i.toString();
+
+                if (i_str.match(regex)) {
                     total = total + i;
                 }
             }
         }
+
     }
 
     return total;
@@ -56,10 +71,10 @@ function countInvalidIds(ranges: Array<Range>): number {
 
 
 async function main() {
-    const filePath = path.join(__dirname, "../assets/day2.txt");
+    const filePath = path.join(__dirname, "../assets/day2/input.txt");
     let contents = await readInput(filePath);
     const ranges = parseContents(contents);
-    const res = countInvalidIds(ranges);
+    const res = countInvalidIds(ranges, 2);
 
     console.log(res)
 }
