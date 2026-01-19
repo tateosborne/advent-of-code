@@ -31,39 +31,18 @@ function parseContents(contents: string): Array<Range> {
 }
 
 
-function countInvalidIds(ranges: Array<Range>, part: Number): number {
+function countInvalidIds(ranges: Array<Range>, regex: RegExp): number {
     let total = 0;
 
-    if (part == 1) {
-        for (const r of ranges) {
+    for (const r of ranges) {
 
-            for (let i=r.lower; i<=r.upper; i++) {
-                const i_str = i.toString();
-                const length = i_str.length;
+        for (let i=r.lower; i<=r.upper; i++) {
+            const i_str = i.toString();
 
-                if (length % 2 == 0) {
-                    const left = i_str.substring(0, length/2);
-                    const right = i_str.substring(length/2);
-
-                    if (left == right) {
-                        total = total + i;
-                    }
-                }
+            if (i_str.match(regex)) {
+                total = total + i;
             }
         }
-    } else {
-        const regex = /\b(\d+)\1+\b/;
-        for (const r of ranges) {
-
-            for (let i=r.lower; i<=r.upper; i++) {
-                const i_str = i.toString();
-
-                if (i_str.match(regex)) {
-                    total = total + i;
-                }
-            }
-        }
-
     }
 
     return total;
@@ -74,7 +53,9 @@ async function main() {
     const filePath = path.join(__dirname, "../assets/day2/input.txt");
     let contents = await readInput(filePath);
     const ranges = parseContents(contents);
-    const res = countInvalidIds(ranges, 2);
+    const regex1 = /\b(\d+)\1\b/;
+    const regex2 = /\b(\d+)\1+\b/;
+    const res = countInvalidIds(ranges, regex2);
 
     console.log(res)
 }
