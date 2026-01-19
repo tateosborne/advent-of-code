@@ -45,7 +45,7 @@ function findJoltage(banks: string[]): Number {
 
 
 async function main() {
-    const filePath = path.join(__dirname, "../assets/day3/sample.txt");
+    const filePath = path.join(__dirname, "../assets/day3/input.txt");
     const contents = await readInput(filePath);
     const banks: string[] = contents.split("\n");
 
