@@ -72,7 +72,7 @@ async function unlockSafe(fp: string, curr: number): Promise<[number, number]> {
 
 
 async function main(): Promise<void> {
-    const fp = path.join(__dirname, "../assets/day1.txt");
+    const fp = path.join(__dirname, "../assets/day1/input.txt");
     let curr = 50;
 
     const res = await unlockSafe(fp, curr);
