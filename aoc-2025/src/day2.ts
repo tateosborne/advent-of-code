@@ -53,7 +53,7 @@ async function main() {
     const filePath = path.join(__dirname, "../assets/day2/input.txt");
     let contents = await readInput(filePath);
     const ranges = parseContents(contents);
-    const regex1 = /\b(\d+)\1\b/;
+    // const regex1 = /\b(\d+)\1\b/;
     const regex2 = /\b(\d+)\1+\b/;
     const res = countInvalidIds(ranges, regex2);
 
