@@ -11,41 +11,58 @@ async function readInput(fp: string): Promise<string> {
     return contents;
 }
 
-function findJoltage(banks: string[]): Number {
-    let joltages: Number[] = [];
+function findJoltage(banks: string[], digits: number): Number {
+    let joltages: string[][] = [];
 
     for (const bank of banks) {
-        let maxTens = -1;
-        let maxTensIdx = -1;
-        let maxDigit = -1;
+        let batteries: string[] = new Array();
+        let curr = 0;
+        let limit = bank.length - digits;
 
-        for (let i=0; i<bank.length-1; i++) {
-            const candidate = Number(bank[i]);
+        console.log("\n-----------")
+        console.log(`Analyzing bank ${bank}...`)
+        while (batteries.length < 12) {
+            let max = -1;
+            let maxIdx = -1;
 
-            if (candidate > maxTens) {
-                maxTens = candidate;
-                maxTensIdx = i;
+            // console.log("curr=" + curr);
+            // console.log("limit=" + limit);
+            while (curr <= limit) {
+                const candidate = Number(bank[curr]);
+                // console.log("\t curr=" + curr);
+                // console.log("\t cand=" + candidate);
+                // console.log("\t  max=" + max);
+
+                if (candidate > max) {
+                    console.log(`\tUpdating new max from ${max} to ${candidate} at idx ${curr}...`)
+                    max = candidate;
+                    maxIdx = curr;
+                }
+                curr = curr + 1;
             }
+
+            batteries.push(String(max));
+            curr = maxIdx + 1;
+            limit = limit + 1;
+            console.log(`Found max digit to be ${max} at idx ${maxIdx}...`)
+            console.log(`Current batteries selected: ${batteries}...`)
         }
 
-        for (let i=maxTensIdx+1; i<bank.length; i++) {
-            const candidate = Number(bank[i]);
-
-            if (candidate > maxDigit)
-                maxDigit = candidate;
-        }
-
-        joltages.push(Number(String(maxTens) + String(maxDigit)));
+        joltages.push(batteries);
     }
 
-    return joltages.reduce(
-        (a, b) => a.valueOf() + b.valueOf()
-    );
+    console.log("\n\n===========\n\n")
+    const sum = joltages.reduce((total, row) => {
+        const num = row.reduce((acc, digit) => acc + digit, "");
+        return total + Number(num);
+    }, 0);
+
+    return sum;
 }
 
 
 async function main() {
-    const filePath = path.join(__dirname, "../assets/day3/input.txt");
+    const filePath = path.join(__dirname, "../assets/day3/sample.txt");
     const contents = await readInput(filePath);
     const banks: string[] = contents.split("\n");
 
@@ -53,7 +70,7 @@ async function main() {
     if (idx != -1)
         banks.splice(idx);
 
-    const res = findJoltage(banks);
+    const res = findJoltage(banks, 12);
 
     console.log(res);
 }
