@@ -19,22 +19,14 @@ function findJoltage(banks: string[], digits: number): Number {
         let curr = 0;
         let limit = bank.length - digits;
 
-        console.log("\n-----------")
-        console.log(`Analyzing bank ${bank}...`)
         while (batteries.length < 12) {
             let max = -1;
             let maxIdx = -1;
 
-            // console.log("curr=" + curr);
-            // console.log("limit=" + limit);
             while (curr <= limit) {
                 const candidate = Number(bank[curr]);
-                // console.log("\t curr=" + curr);
-                // console.log("\t cand=" + candidate);
-                // console.log("\t  max=" + max);
 
                 if (candidate > max) {
-                    console.log(`\tUpdating new max from ${max} to ${candidate} at idx ${curr}...`)
                     max = candidate;
                     maxIdx = curr;
                 }
@@ -44,14 +36,11 @@ function findJoltage(banks: string[], digits: number): Number {
             batteries.push(String(max));
             curr = maxIdx + 1;
             limit = limit + 1;
-            console.log(`Found max digit to be ${max} at idx ${maxIdx}...`)
-            console.log(`Current batteries selected: ${batteries}...`)
         }
 
         joltages.push(batteries);
     }
 
-    console.log("\n\n===========\n\n")
     const sum = joltages.reduce((total, row) => {
         const num = row.reduce((acc, digit) => acc + digit, "");
         return total + Number(num);
@@ -62,7 +51,7 @@ function findJoltage(banks: string[], digits: number): Number {
 
 
 async function main() {
-    const filePath = path.join(__dirname, "../assets/day3/sample.txt");
+    const filePath = path.join(__dirname, "../assets/day3/input.txt");
     const contents = await readInput(filePath);
     const banks: string[] = contents.split("\n");
 
