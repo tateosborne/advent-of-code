@@ -1,10 +1,19 @@
 import path from "path";
 import { read } from "./lib/readFile";
 
-interface Coordinate {
-    x: number;
-    y: number;
-};
+
+type Offset = { di: number; dj: number };
+
+const OFFSETS: Offset[] = [
+  { di: -1, dj: -1 },
+  { di: -1, dj: 0 },
+  { di: -1, dj: 1 },
+  { di: 0, dj: -1 },
+  { di: 0, dj: 1 },
+  { di: 1, dj: -1 },
+  { di: 1, dj: 0 },
+  { di: 1, dj: 1 },
+] as const;
 
 function parseGrid(str: string): string[][] {
   const temp: string[] = str.split("\n");
@@ -16,17 +25,43 @@ function parseGrid(str: string): string[][] {
 }
 
 function findAccessibleRolls(grid: string[][]): number {
-    /**
-     * for each element (iterate horizontally)
-     * check bordering tiles 
-     * early 'continue' if count == 4 
-     * if < 4, update running total
-     */
-    let total = 0;
+  const isOutOfBounds = (i: number, j: number, offset: Offset) => {
+    if (
+      i + offset.di < 0 ||
+      i + offset.di >= grid.length ||
+      j + offset.dj < 0 ||
+      j + offset.dj >= grid[i].length
+    )
+      return true;
 
-    const bfs = (curr: Coordinate) => {curr};
+    return false;
+  };
 
-    return total;
+  let total = 0;
+  let gridCopy = grid.map(row => [...row]);
+
+  for (let i = 0; i < grid.length; i++) {
+    for (let j = 0; j < grid[i].length; j++) {
+      let neighbours = 0;
+
+      if (grid[i][j] != "@") continue;
+
+      for (const offset of OFFSETS) {
+        if (isOutOfBounds(i, j, offset)) continue;
+
+        if (grid[i + offset.di][j + offset.dj] == "@") {
+          neighbours = neighbours + 1;
+        }
+      }
+
+      if (neighbours < 4) {
+        total = total + 1;
+        gridCopy[i][j] = "x";
+      }
+    }
+  }
+
+  return total;
 }
 
 async function main() {
