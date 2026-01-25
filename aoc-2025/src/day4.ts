@@ -1,7 +1,6 @@
 import path from "path";
 import { read } from "./lib/readFile";
 
-
 type Offset = { di: number; dj: number };
 
 const OFFSETS: Offset[] = [
@@ -38,7 +37,7 @@ function findAccessibleRolls(grid: string[][]): number {
   };
 
   let total = 0;
-  let gridCopy = grid.map(row => [...row]);
+  let gridCopy = grid.map((row) => [...row]);
 
   for (let i = 0; i < grid.length; i++) {
     for (let j = 0; j < grid[i].length; j++) {
@@ -65,7 +64,7 @@ function findAccessibleRolls(grid: string[][]): number {
 }
 
 async function main() {
-  const filePath = path.join(__dirname, "../assets/day4/sample.txt");
+  const filePath = path.join(__dirname, "../assets/day4/input.txt");
   const contents = await read(filePath);
 
   const grid = parseGrid(contents);
